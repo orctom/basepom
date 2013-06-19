@@ -2,12 +2,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.orctom</groupId>
 	<artifactId>basepom</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>basepom</name>
 	<properties>
         <java.version>1.7</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        
+        <distribution.host>http://localhost</distribution.host>
         
         <maven.compiler.plugin.version>3.0</maven.compiler.plugin.version>
 		<maven.eclipse.plugin.version>2.9</maven.eclipse.plugin.version>
@@ -49,27 +51,121 @@
 		<repository>
 			<id>od-release</id>
 			<name>OD release repository</name>
-			<url>http://10.95.64.71/nexus/content/repositories/releases/</url>
+			<url>${distribution.host}/nexus/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>od-snapshot</id>
 			<name>OD snapshot repository</name>
-			<url>http://10.95.64.71/nexus/content/repositories/snapshots/</url>
+			<url>${distribution.host}/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 		<site>
 			<id>site</id>
 			<name>Site deployments</name>
-			<url>dav:http://10.95.64.71/site/${project.version}/</url>
+			<url>dav:${distribution.host}/site/${project.version}/</url>
 		</site>
 	</distributionManagement>
     
 	<build>
 		<finalName>basepom</finalName>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven.compiler.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven.surefire.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-eclipse-plugin</artifactId>
+					<version>${maven.eclipse.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>${maven.war.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>${maven.antrun.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>${maven.site.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${jacoco.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>${maven.enforcer.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>${maven.assembly.plugin.version}</version>
+					<executions>
+						<execution>
+							<id>package</id>
+							<goals>
+								<goal>single</goal>
+							</goals>
+							<phase>package</phase>
+						</execution>
+					</executions>
+					<configuration>
+						<appendAssemblyId>false</appendAssemblyId>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>${build.helper.plugin.version}</version>
+				</plugin>
+				<!--
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-enforcer-plugin</artifactId>
+										<goals>
+											<goal>enforce</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+				-->
+				<plugin>
+					<groupId>com.google.code.maven-replacer-plugin</groupId>
+					<artifactId>replacer</artifactId>
+					<version>${replacer.plugin.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
-				<version>2.9</version>
 				<configuration>
 					<downloadSources>true</downloadSources>
 				</configuration>
@@ -77,7 +173,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
 				<configuration>
 					<fork>true</fork>
 					<source>${java.version}</source>
@@ -85,9 +180,14 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>${jacocoAgent} -Xmx1024m -XX:MaxPermSize=1024m</argLine>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.1.2</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -99,9 +199,27 @@
 				</executions>
 			</plugin>
 			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>timestamp-property</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>timestamp-property</goal>
+						</goals>
+						<configuration>
+							<name>build.timestamp</name>
+							<locale>en</locale>
+							<pattern>yyyy.MM.dd HH:mm:ss z</pattern>
+							<timeZone>EST</timeZone>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
-				<version>3.1</version>
 				<configuration>
 					<reportPlugins>
 						<plugin>
@@ -126,6 +244,99 @@
 					</reportPlugins>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>${versions.plugin.version}</version>
+				<!-- mvn versions:set -DnewVersion=trunk-SNAPSHOT -->
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.sonar</groupId>
+				<artifactId>sonar-maven3-plugin</artifactId>
+				<version>${sonar.plugin.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>enforce-versions</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>[3.0.0,)</version>
+								</requireMavenVersion>
+								<requireJavaVersion>
+									<version>[${java.version},)</version>
+								</requireJavaVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>com/orctom/**</include>
+					</includes>
+					<destFile>${project.build.directory}/code-coverage/jacoco.exec</destFile>
+					<dataFile>${project.build.directory}/code-coverage/jacoco.exec</dataFile>
+					<append>true</append>
+					<propertyName>jacocoAgent</propertyName>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.jacoco</groupId>
+						<artifactId>org.jacoco.agent</artifactId>
+						<version>${jacoco.plugin.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 		</plugins>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-webdav-jackrabbit</artifactId>
+				<version>2.4</version>
+			</extension>
+		</extensions>
 	</build>
+	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<artifactId>junit</artifactId>
+				<groupId>junit</groupId>
+				<version>${junit.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>
