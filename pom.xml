@@ -166,6 +166,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
+				<version>${maven.source.plugin.version}</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -188,9 +189,9 @@
 						</goals>
 						<configuration>
 							<name>build.timestamp</name>
-							<locale>en</locale>
+							<locale>en_US</locale>
 							<pattern>yyyy.MM.dd HH:mm:ss z</pattern>
-							<timeZone>EST</timeZone>
+							<timeZone>America/New_York</timeZone>
 						</configuration>
 					</execution>
 				</executions>
