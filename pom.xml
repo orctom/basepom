@@ -6,7 +6,23 @@
   <artifactId>basepom</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
+
   <name>basepom</name>
+  <description>Basepom</description>
+  <url>https://github.com/orctom/basepom/</url>
+
+  <issueManagement>
+    <url>https://github.com/orctom/basepom/issues</url>
+    <system>GitHub</system>
+  </issueManagement>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
   <scm>
     <url>https://github.com/orctom/basepom/</url>
