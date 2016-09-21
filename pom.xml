@@ -183,7 +183,7 @@
         <configuration>
           <mavenExecutorId>forked-path</mavenExecutorId>
           <useReleaseProfile>false</useReleaseProfile>
-          <arguments>-Prelease ${release.args}</arguments>
+          <arguments>-Prelease</arguments>
           <tagNameFormat>@{project.version}</tagNameFormat>
         </configuration>
       </plugin>
