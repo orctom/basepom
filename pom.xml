@@ -86,7 +86,6 @@
   </distributionManagement>
 
   <build>
-    <finalName>basepom</finalName>
     <pluginManagement>
       <plugins>
         <plugin>
