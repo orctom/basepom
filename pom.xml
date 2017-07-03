@@ -41,23 +41,23 @@
     <java.version>1.7</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <maven.compiler.plugin.version>3.5.1</maven.compiler.plugin.version>
-    <maven.assembly.plugin.version>2.6</maven.assembly.plugin.version>
+    <maven.compiler.plugin.version>3.6.1</maven.compiler.plugin.version>
+    <maven.assembly.plugin.version>3.0</maven.assembly.plugin.version>
     <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
     <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
     <maven.war.plugin.version>3.0.0</maven.war.plugin.version>
     <maven.antrun.plugin.version>1.8</maven.antrun.plugin.version>
     <maven.release.plugin.version>2.5.3</maven.release.plugin.version>
     <maven.scm.plugin.version>1.9.5</maven.scm.plugin.version>
-    <maven.site.plugin.version>3.5.1</maven.site.plugin.version>
+    <maven.site.plugin.version>3.6</maven.site.plugin.version>
     <maven.surefire.report.plugin.version>2.19.1</maven.surefire.report.plugin.version>
     <maven.jxr.plugin.version>2.5</maven.jxr.plugin.version>
     <maven.javadoc.plugin.version>2.10.4</maven.javadoc.plugin.version>
-    <maven.surefire.plugin.version>2.19.1</maven.surefire.plugin.version>
+    <maven.surefire.plugin.version>2.20</maven.surefire.plugin.version>
     <maven.enforcer.plugin.version>1.4.1</maven.enforcer.plugin.version>
     <versions.plugin.version>2.3</versions.plugin.version>
     <sonar.plugin.version>5.1</sonar.plugin.version>
-    <jacoco.plugin.version>0.7.8</jacoco.plugin.version>
+    <jacoco.plugin.version>0.7.9</jacoco.plugin.version>
     <build.helper.plugin.version>1.12</build.helper.plugin.version>
     <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
@@ -266,29 +266,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-        <configuration>
-          <reportPlugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-project-info-reports-plugin</artifactId>
-            </plugin>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-surefire-report-plugin</artifactId>
-              <reportSets>
-                <reportSet>
-                  <reports>
-                    <report>report-only</report>
-                  </reports>
-                </reportSet>
-              </reportSets>
-            </plugin>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-jxr-plugin</artifactId>
-            </plugin>
-          </reportPlugins>
-        </configuration>
+        <version>${maven.site.plugin.version}</version>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -366,6 +344,33 @@
       </extension>
     </extensions>
   </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.9</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>2.20</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>report-only</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>2.5</version>
+      </plugin>
+    </plugins>
+  </reporting>
 
   <profiles>
     <profile>
